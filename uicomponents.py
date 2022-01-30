@@ -1,7 +1,7 @@
 from java.util import EventObject, EventListener
-from javax.swing import JButton, JComponent, JPanel,JLabel, AbstractAction, JTextField, SwingUtilities
+from javax.swing import JButton, JPanel,JLabel, JTextField, SwingUtilities
 from javax.swing.event import EventListenerList
-from java.awt.event import MouseAdapter, FocusListener, ActionListener, KeyEvent
+from java.awt.event import MouseAdapter, FocusListener, KeyEvent
 
 class TabComponent(JPanel):    
 

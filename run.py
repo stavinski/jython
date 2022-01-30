@@ -1,7 +1,7 @@
 from java.lang import Runnable
-from javax.swing import JFrame, JPanel, JLabel, JTabbedPane, SwingUtilities
+from javax.swing import JFrame, JPanel, JTabbedPane, SwingUtilities
 from uicomponents import TabComponent, TabComponentCloseListener, TabComponentEditableTabMixin,TabComponentCloseableMixin
-from java.awt import BorderLayout, FlowLayout, Font
+from java.awt import BorderLayout, Font
 
 class MyUberTabComponent(TabComponentEditableTabMixin, TabComponentCloseableMixin, TabComponent):
 
@@ -38,7 +38,7 @@ class App(Runnable, TabComponentCloseListener):
     
     def tabClose(self, event):
         idx = self.tabbedpane.indexOfTabComponent(event.getSource())
-        print(idx)
+        self.tabbedpane.remove(idx)
     
 if __name__ == '__main__':
     app = App()
