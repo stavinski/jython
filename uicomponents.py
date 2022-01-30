@@ -45,9 +45,26 @@ class TabComponentCloseableMixin(object):
         for listener in self.listeners.getListeners(TabComponentCloseListener):
             listener.tabClose(event)
 
+
+class TabComponentTitleChangedEvent(EventObject):
+
+    def __init__(self, source, title):
+        # super(TabComponentTitleChangedEvent, self).__init__(source) not sure why but this does not work :-/
+        EventObject.__init__(self, source)
+        self._title = title
+
+    def getTitle(self):
+        return self._title
+        
+
+class TabComponentTitleChangedListener(EventListener):
+    def titleChanged(event):
+        pass
+
 class TabComponentEditableTabMixin(object):
     
     def __init__(self):
+        self.listeners = EventListenerList()
         self.isEditing = False
         self.event_listener = TabComponentEditableTabMixin.EventListener(self)
         self.text_field = TabTextField()
@@ -59,6 +76,17 @@ class TabComponentEditableTabMixin(object):
         self.addFocusListener(self.event_listener)
         self.add(self.text_field)
         super(TabComponentEditableTabMixin, self).__init__()
+    
+    def addTitleChangedListener(self, listener):
+        self.listeners.add(TabComponentTitleChangedListener, listener)
+
+    def removeTitleChangedListener(self, listener):
+        self.listeners.remove(TabComponentTitleChangedListener, listener)
+
+    def fireTitleChanged(self):   
+        event = TabComponentTitleChangedEvent(self, self.text_field.text)
+        for listener in self.listeners.getListeners(TabComponentTitleChangedListener):
+            listener.titleChanged(event)
     
     def setText(self, text):
         self.text_field.text = text
@@ -73,7 +101,8 @@ class TabComponentEditableTabMixin(object):
 
     def mouseClicked(self, event):
         if SwingUtilities.isLeftMouseButton(event) and event.clickCount == 2:
-            self.setEditing(not self.isEditing)
+            if not self.isEditing:
+                self.setEditing(True)
 
     def keyPressed(self, event):
         if event.keyCode == KeyEvent.VK_ESCAPE:
@@ -82,9 +111,11 @@ class TabComponentEditableTabMixin(object):
 
     def submitted(self,event):
         self.setEditing(False)
+        self.fireTitleChanged()
 
     def focusLost(self, event):
         self.setEditing(False)
+        self.fireTitleChanged()
 
     class EventListener(MouseAdapter, FocusListener):
         

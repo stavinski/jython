@@ -1,6 +1,6 @@
 from java.lang import Runnable
-from javax.swing import JFrame, JPanel, JTabbedPane, SwingUtilities
-from uicomponents import TabComponent, TabComponentCloseListener, TabComponentEditableTabMixin,TabComponentCloseableMixin
+from javax.swing import JFrame, JPanel, JTabbedPane, SwingUtilities, JLabel, SwingConstants
+from uicomponents import TabComponent, TabComponentCloseListener, TabComponentTitleChangedListener, TabComponentEditableTabMixin,TabComponentCloseableMixin
 from java.awt import BorderLayout, Font
 
 class MyUberTabComponent(TabComponentEditableTabMixin, TabComponentCloseableMixin, TabComponent):
@@ -22,10 +22,17 @@ class App(Runnable, TabComponentCloseListener):
         frame.add(panel)
 
         tab = MyUberTabComponent()
+        tab.addTitleChangedListener(App.TitleChangedListener())
         tab.addCloseListener(self)
         tab.setText('Test')
         
-        self.tabbedpane.addTab(None, JPanel())
+        tabPanel = JPanel(BorderLayout(), opaque=False)
+        tabPanel.add(JLabel('''<html><body>
+<div style="font-size: 16pt;text-align:center">
+Here is a Label.
+</div></body></html>''', SwingConstants.CENTER))
+
+        self.tabbedpane.addTab(None, tabPanel)
         self.tabbedpane.setTabComponentAt(0, tab)
 
         panel.add(self.tabbedpane)
@@ -39,7 +46,13 @@ class App(Runnable, TabComponentCloseListener):
     def tabClose(self, event):
         idx = self.tabbedpane.indexOfTabComponent(event.getSource())
         self.tabbedpane.remove(idx)
-    
+
+    class TitleChangedListener(TabComponentTitleChangedListener):
+
+        def titleChanged(self, event):
+            print(event.getTitle())
+
+
 if __name__ == '__main__':
     app = App()
     SwingUtilities.invokeLater(app)
