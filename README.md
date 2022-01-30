@@ -16,7 +16,7 @@ java -jar <jython>.jar run.py
 
 #### Intro
 
-Every wanted a more custom tab like the ones used in Burp such as the Repeater that allow renaming and closing? Look no further I have created 2 mixin classes that support both of these:
+Ever wanted a more custom tab like the ones used in Burp such as the Repeater tab that allow renaming and closing? Look no further I have created 2 mixin classes that support both of these:
 
 * `TabComponentEditableTabMixin`
 * `TabComponentCloseableMixin`
