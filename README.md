@@ -76,4 +76,8 @@ class MyUberTabComponentWithBigText(TabComponentEditableTabMixin, TabComponentCl
         self.text_field.font = Font(Font.DIALOG, Font.BOLD, 15) 
 ~~~
 
-Simply make sure it is performed after the call to the mixins and be careful not to intefere with how they operate oherwise should be all good!
+Simply make sure it is performed after the call to the mixins and be careful not to intefere with how they operate otherwise should be all good!
+
+#### TODO
+
+* Event fired when title changed...assume that the client wants this persisted somewhere
