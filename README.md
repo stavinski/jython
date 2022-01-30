@@ -16,7 +16,7 @@ java -jar <jython>.jar run.py
 
 #### Intro
 
-Ever wanted a more custom tab like the ones used in Burp such as the Repeater tab that allow renaming and closing? Look no further I have created 2 mixin classes that support both of these:
+Ever wanted a more custom tab like the ones used in BurpSuite such as the Repeater tab that allow renaming and closing? Look no further I have created 2 mixin classes that support both of these:
 
 * `TabComponentEditableTabMixin`
 * `TabComponentCloseableMixin`
@@ -48,6 +48,10 @@ tab.setText('Test')
 tabbedpane.addTab(None, JPanel())
 tabbedpane.setTabComponentAt(0, tab)
 ~~~
+
+#### How it looks in BurpSuite
+
+![Screenshot from BurpSuite](images/tab_in_burp.png)
 
 #### Common Questions?
 
@@ -81,3 +85,4 @@ Simply make sure it is performed after the call to the mixins and be careful not
 #### TODO
 
 * Event fired when title changed...assume that the client wants this persisted somewhere
+* Colour change when hover over close button
