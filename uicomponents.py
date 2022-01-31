@@ -2,6 +2,7 @@ from java.util import EventObject, EventListener
 from javax.swing import JButton, JPanel,JLabel, JTextField, SwingUtilities
 from javax.swing.event import EventListenerList
 from java.awt.event import MouseAdapter, FocusListener, KeyEvent
+from java.awt import Color
 
 class TabComponent(JPanel):    
 
@@ -27,11 +28,12 @@ class TabComponentCloseableMixin(object):
     
     def __init__(self):
         self.listeners = EventListenerList()
-        close_button = JButton(actionPerformed=self._clicked)
-        close_button.setText(unichr(0x00d7))  # multiplication sign
-        close_button.border = None
-        close_button.contentAreaFilled = False
-        self.add(close_button)
+        self.close_button = JButton(actionPerformed=self._clicked)
+        self.close_button.setText(unichr(0x00d7))  # multiplication sign
+        self.close_button.border = None
+        self.close_button.contentAreaFilled = False
+        self.close_button.addMouseListener(TabComponentCloseableMixin.EventListener(self))
+        self.add(self.close_button)
         super(TabComponentCloseableMixin, self).__init__()
         
     def addCloseListener(self, listener):
@@ -40,10 +42,27 @@ class TabComponentCloseableMixin(object):
     def removeCloseListener(self, listener):
         self.listeners.remove(TabComponentCloseListener, listener)
 
+    def mouseEntered(self, event):
+        self.close_button.foreground = Color.red
+
+    def mouseExited(self, event):
+        self.close_button.foreground = Color.black
+
     def _clicked(self, event):   
         event = TabComponentClosedEvent(self)
         for listener in self.listeners.getListeners(TabComponentCloseListener):
             listener.tabClose(event)
+
+    class EventListener(MouseAdapter):
+
+        def __init__(self, parent):
+            self.parent = parent
+
+        def mouseEntered(self, event):
+            self.parent.mouseEntered(event)
+
+        def mouseExited(self, event):
+            self.parent.mouseExited(event)
 
 
 class TabComponentTitleChangedEvent(EventObject):
