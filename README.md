@@ -43,7 +43,7 @@ The features will be applied in the order they are mixed into the class left to 
 ~~~python
 tabbedpane = JTabbedPane()
 tab = MyUberTabComponent()
-tab.setText('Test')
+tab.text = 'Test'
         
 tabbedpane.addTab(None, JPanel())
 tabbedpane.setTabComponentAt(0, tab)

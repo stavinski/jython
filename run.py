@@ -24,7 +24,7 @@ class App(Runnable, TabComponentCloseListener):
         tab = MyUberTabComponent()
         tab.addTitleChangedListener(App.TitleChangedListener())
         tab.addCloseListener(self)
-        tab.setText('Test')
+        tab.text = 'Test'
         
         tabPanel = JPanel(BorderLayout(), opaque=False)
         tabPanel.add(JLabel('''<html><body>
