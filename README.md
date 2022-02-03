@@ -43,6 +43,7 @@ The features will be applied in the order they are mixed into the class left to 
 ~~~python
 tabbedpane = JTabbedPane()
 tab = MyUberTabComponent()
+tab.tabbed_pane = tabbedpane
 tab.text = 'Test'
         
 tabbedpane.addTab(None, JPanel())
@@ -57,7 +58,7 @@ tabbedpane.setTabComponentAt(0, tab)
 
 **Q.** How to actually remove the tab from the `JTabbedPane`?
 
-**A.** In order to actually allow the client to choose if the tab should be should be removed from the tabs (like providing a confirmation dialog) the mixin does not make any calls to the containing `JTabbedPane` in fact it knows nothing about it, instead an event is raised that can be listened to you can then use the following code to remove the tab:
+**A.** In order to actually allow the client to choose if the tab should be should be removed from the tabs (like providing a confirmation dialog) the mixin does not make any calls to the containing `JTabbedPane`, instead an event is raised that can be listened to you can then use the following code to remove the tab:
 
 ~~~python
 # tab and tabbedpane previously declared and current class implements TabComponentCloseListener
