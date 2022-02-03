@@ -22,10 +22,17 @@ class App(Runnable, TabComponentCloseListener):
         frame.add(panel)
 
         tab = MyUberTabComponent()
+        tab.tabbed_pane = self.tabbedpane
         tab.addTitleChangedListener(App.TitleChangedListener())
         tab.addCloseListener(self)
         tab.text = 'Test'
         
+        tab2 = MyUberTabComponent()
+        tab2.tabbed_pane = self.tabbedpane
+        tab2.addTitleChangedListener(App.TitleChangedListener())
+        tab2.addCloseListener(self)
+        tab2.text = 'Test 2'
+
         tabPanel = JPanel(BorderLayout(), opaque=False)
         tabPanel.add(JLabel('''<html><body>
 <div style="font-size: 16pt;text-align:center">
@@ -34,6 +41,8 @@ Here is a Label.
 
         self.tabbedpane.addTab(None, tabPanel)
         self.tabbedpane.setTabComponentAt(0, tab)
+        self.tabbedpane.addTab(None, JPanel())
+        self.tabbedpane.setTabComponentAt(1, tab2)
 
         panel.add(self.tabbedpane)
 

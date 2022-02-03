@@ -8,10 +8,19 @@ class TabComponent(JPanel):
 
     def __init__(self):
         self.opaque = False
+        self._tabbed_pane = None
 
     def addTitle(self, title):
         label = JLabel(title)
         self.add(label)
+
+    @property
+    def tabbed_pane(self):
+        return self._tabbed_pane
+
+    @tabbed_pane.setter
+    def tabbed_pane(self, tabbed_pane):
+        self._tabbed_pane = tabbed_pane
 
 
 class TabComponentClosedEvent(EventObject):
@@ -127,10 +136,13 @@ class TabComponentEditableTabMixin(object):
         if SwingUtilities.isLeftMouseButton(event) and event.clickCount == 2:
             if not self.isEditing:
                 self.setEditing(True)
+        elif SwingUtilities.isLeftMouseButton(event) and event.clickCount == 1:
+            idx = self.tabbed_pane.indexOfTabComponent(self)
+            self.tabbed_pane.selectedIndex = idx
 
     def keyPressed(self, event):
         if event.keyCode == KeyEvent.VK_ESCAPE:
-            self.setText(self._text)  # set the text back
+            self.text = self._text  # set the text back
             self.setEditing(False)
 
     def submitted(self,event):
