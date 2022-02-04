@@ -1,9 +1,11 @@
+import sys
+
 from itertools import count
 from java.util import EventObject, EventListener
 from javax.swing import JScrollPane, JTextArea, JButton, JPanel,JLabel, JTextField, SwingUtilities
 from javax.swing.event import EventListenerList, DocumentListener
 from java.awt.event import MouseAdapter, FocusListener, KeyEvent
-from java.awt import Color
+from java.awt import Color, Dimension
 
 class TabComponent(JPanel):    
 
@@ -194,6 +196,8 @@ class TabTextField(JTextField):
 
 class TextEditor(DocumentListener):
     
+    HEIGHT = sys.maxint
+
     def __init__(self, text_area):
         self._show_numbers = False
         self.lines = None
@@ -204,8 +208,13 @@ class TextEditor(DocumentListener):
 
     def show_numbers(self):
         self._show_numbers = True
-        self.lines = JTextArea("1\n", editable=False, font=self.text_area.font)
+        self.lines = JTextArea("1\n", 
+                        editable=False, 
+                        font=self.text_area.font, 
+                        background=Color(238, 238, 236),
+                        margin=(0,5,0,5))
         self.scroll_pane.rowHeaderView = self.lines
+        self._set_preferred_width(99)
 
     def hide_numbers(self):
         self._show_numbers = False
@@ -230,3 +239,14 @@ class TextEditor(DocumentListener):
             root = document.defaultRootElement
             for number in range(2, root.getElementIndex(len) + 2):
                 self.lines.text += '{}\n'.format(number)
+
+    def _set_preferred_width(self, lines):
+        pass
+        # digits = len(str(lines))
+        # if digits != currentDigits and digits > 1:
+        #     currentDigits = digits
+        #     width = fontMetrics.charWidth( '0' ) * digits
+        #     d = getPreferredSize()
+        #     d.size = (2 * MARGIN + width, TextEditor.HEIGHT)
+        #     self.lines.preferredSize = d
+        #     self.lines.size = d

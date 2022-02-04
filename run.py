@@ -40,7 +40,7 @@ Here is a Label.
 </div></body></html>''', SwingConstants.CENTER))
 
         tab2Panel = JPanel(BorderLayout())
-        text_area = JTextArea(font=Font('Monospace', Font.PLAIN, 14),editable=True)
+        text_area = JTextArea(font=Font('monospace', Font.PLAIN, 14))
         text_editor = TextEditor(text_area)
         text_editor.show_numbers()
         tab2Panel.add(text_editor.build())
