@@ -1,6 +1,7 @@
+from itertools import count
 from java.util import EventObject, EventListener
-from javax.swing import JButton, JPanel,JLabel, JTextField, SwingUtilities
-from javax.swing.event import EventListenerList
+from javax.swing import JScrollPane, JTextArea, JButton, JPanel,JLabel, JTextField, SwingUtilities
+from javax.swing.event import EventListenerList, DocumentListener
 from java.awt.event import MouseAdapter, FocusListener, KeyEvent
 from java.awt import Color
 
@@ -189,3 +190,43 @@ class TabTextField(JTextField):
     # required to allow tab to grow while editing
     def isValidateRoot(self):
         return False
+
+
+class TextEditor(DocumentListener):
+    
+    def __init__(self, text_area):
+        self._show_numbers = False
+        self.lines = None
+        self.text_area = text_area
+        self.scroll_pane = JScrollPane()
+        self.scroll_pane.viewport.add(self.text_area)
+        self.text_area.document.addDocumentListener(self)
+
+    def show_numbers(self):
+        self._show_numbers = True
+        self.lines = JTextArea("1\n", editable=False, font=self.text_area.font)
+        self.scroll_pane.rowHeaderView = self.lines
+
+    def hide_numbers(self):
+        self._show_numbers = False
+
+    def build(self):
+        return self.scroll_pane
+
+    def changedUpdate(self, event):
+        print(event)
+        pass
+
+    def insertUpdate(self, event):
+        self._update_lines(event.document)
+
+    def removeUpdate(self, event):
+        self._update_lines(event.document)
+
+    def _update_lines(self, document):
+        if self._show_numbers:
+            self.lines.text = '1\n'
+            len = document.length
+            root = document.defaultRootElement
+            for number in range(2, root.getElementIndex(len) + 2):
+                self.lines.text += '{}\n'.format(number)

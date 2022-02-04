@@ -1,6 +1,6 @@
 from java.lang import Runnable
-from javax.swing import JFrame, JPanel, JTabbedPane, SwingUtilities, JLabel, SwingConstants
-from uicomponents import TabComponent, TabComponentCloseListener, TabComponentTitleChangedListener, TabComponentEditableTabMixin,TabComponentCloseableMixin
+from javax.swing import JFrame, JPanel, JTabbedPane, SwingUtilities, JLabel, SwingConstants, JTextArea
+from uicomponents import TextEditor, TabComponent, TabComponentCloseListener, TabComponentTitleChangedListener, TabComponentEditableTabMixin,TabComponentCloseableMixin
 from java.awt import BorderLayout, Font
 
 class MyUberTabComponent(TabComponentEditableTabMixin, TabComponentCloseableMixin, TabComponent):
@@ -39,9 +39,15 @@ class App(Runnable, TabComponentCloseListener):
 Here is a Label.
 </div></body></html>''', SwingConstants.CENTER))
 
+        tab2Panel = JPanel(BorderLayout())
+        text_area = JTextArea(font=Font('Monospace', Font.PLAIN, 14),editable=True)
+        text_editor = TextEditor(text_area)
+        text_editor.show_numbers()
+        tab2Panel.add(text_editor.build())
+
         self.tabbedpane.addTab(None, tabPanel)
         self.tabbedpane.setTabComponentAt(0, tab)
-        self.tabbedpane.addTab(None, JPanel())
+        self.tabbedpane.addTab(None, tab2Panel)
         self.tabbedpane.setTabComponentAt(1, tab2)
 
         panel.add(self.tabbedpane)
