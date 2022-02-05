@@ -1,11 +1,8 @@
-import sys
-
-from itertools import count
 from java.util import EventObject, EventListener
-from javax.swing import JScrollPane, JTextArea, JButton, JPanel,JLabel, JTextField, SwingUtilities
-from javax.swing.event import EventListenerList, DocumentListener
+from javax.swing import JTextArea, JButton, JPanel,JLabel, JTextField, SwingUtilities
+from javax.swing.event import EventListenerList
 from java.awt.event import MouseAdapter, FocusListener, KeyEvent
-from java.awt import Color, Dimension
+from java.awt import Color
 
 class TabComponent(JPanel):    
 
@@ -194,59 +191,21 @@ class TabTextField(JTextField):
         return False
 
 
-class TextEditor(DocumentListener):
-    
-    HEIGHT = sys.maxint
+class BurpUI():
 
-    def __init__(self, text_area):
-        self._show_numbers = False
-        self.lines = None
-        self.text_area = text_area
-        self.scroll_pane = JScrollPane()
-        self.scroll_pane.viewport.add(self.text_area)
-        self.text_area.document.addDocumentListener(self)
+    @staticmethod
+    def _find_textarea(parent):
+        # keep searching down the tree till we find 
+        for child in parent.getComponents():
+            if isinstance(child, JTextArea):
+                return child
+            return BurpUI._find_textarea(child)
 
-    def show_numbers(self):
-        self._show_numbers = True
-        self.lines = JTextArea("1\n", 
-                        editable=False, 
-                        font=self.text_area.font, 
-                        background=Color(238, 238, 236),
-                        margin=(0,5,0,5))
-        self.scroll_pane.rowHeaderView = self.lines
-        self._set_preferred_width(99)
+        raise RuntimeError('Could not find JTextArea.')
 
-    def hide_numbers(self):
-        self._show_numbers = False
-
-    def build(self):
-        return self.scroll_pane
-
-    def changedUpdate(self, event):
-        print(event)
-        pass
-
-    def insertUpdate(self, event):
-        self._update_lines(event.document)
-
-    def removeUpdate(self, event):
-        self._update_lines(event.document)
-
-    def _update_lines(self, document):
-        if self._show_numbers:
-            self.lines.text = '1\n'
-            len = document.length
-            root = document.defaultRootElement
-            for number in range(2, root.getElementIndex(len) + 2):
-                self.lines.text += '{}\n'.format(number)
-
-    def _set_preferred_width(self, lines):
-        pass
-        # digits = len(str(lines))
-        # if digits != currentDigits and digits > 1:
-        #     currentDigits = digits
-        #     width = fontMetrics.charWidth( '0' ) * digits
-        #     d = getPreferredSize()
-        #     d.size = (2 * MARGIN + width, TextEditor.HEIGHT)
-        #     self.lines.preferredSize = d
-        #     self.lines.size = d
+    @staticmethod
+    def get_textarea(editor):
+        # help retrieve the main editor JTextArea component from the built-in Burp ITextEditor returned from callbacks.createTextEditor()
+        # saves having to remember the component position in the arrays
+        component = editor.component
+        return BurpUI._find_textarea(component.getComponents()[1])

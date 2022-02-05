@@ -88,3 +88,29 @@ Simply make sure it is performed after the super `__init__` call to the mixins a
 * ~~Event fired when title changed...assume that the client wants this persisted somewhere~~
 * ~~Colour change when hover over close button~~
 * Offer an alternative to the Java OO based eventing i.e. allow a simple callback function to be provided
+
+
+### BurpUI
+
+#### Intro
+
+The built-in editor provided by Burp Suite via the `callbacks.createTextEditor()` method is pretty awesome out of the box with support for line numbering, searching, copy/paste and key bindings already being provided. 
+
+The only issue is that the API provided by the `ITextEditor` is a bit limited for instance being able to listen for events on document changes is not provided. When trying to add support for text editing this left 2 options either build it from scratch using some of the other text editor code available or harness the power of the built-in one but somehow hook into any extra functionality required, I started with option 1 but quickly changed my mind. In order to help I with this I have created the `BurpUI` class that contains a helper method to obtain the main `JTextArea` used by the component.
+
+I may also look to extend out for other things such as being able to place button next to the search panel (see the clear button on the Burp Suite extensions output frame).
+
+#### Usage
+
+Pretty straightforward simply import `BurpUI` grab an instance of the `ITextEditor` and pass into `get_textarea`:
+
+~~~python
+from uicomponents import BurpUI
+
+editor = callbacks.createTextEditor()
+text_area = BurpUI.get_textarea(editor)
+
+# now hook into the document listener
+text_area.document.addDocumentListener(self)
+~~~
+
